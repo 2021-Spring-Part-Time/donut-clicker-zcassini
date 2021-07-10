@@ -1,15 +1,3 @@
-// const container = (document.querySelector('.container').innerText =
-//   'mmmmmmmmm doughnuts.... ahhhhhhh!')
-
-const makeDonutButton = document.getElementById('makeDonutButton')
-const buyAutoClickerButton = document.getElementById('buyAutoClickerButton')
-const buyMultiplierButton = document.getElementById('buyMultiplierButton')
-const donutsDisplay = document.getElementById('donutsCount')
-const autoClickersDisplay = document.getElementById('autoClickersCount')
-const autoClickersCostDisplay = document.getElementById('autoClickersCost')
-const multiplersDisplay = document.getElementById('multipliersCount')
-const multiplersCostDisplay = document.getElementById('multipliersCost')
-
 // rules and settings
 const STARTING_DONUTS = 1000
 const STARTING_AUTOCLICKERS = 0
@@ -21,6 +9,19 @@ const MULTIPLIER_INITIAL_COST = 10
 
 const AUTOCLICKER_COST_INCREASE_PERCENTAGE = 1.10
 const MULTIPLIER_COST_INCREASE_PERCENTAGE = 1.10
+
+
+const makeDonutButton = document.getElementById('makeDonutButton')
+const buyAutoClickerButton = document.getElementById('buyAutoClickerButton')
+const buyMultiplierButton = document.getElementById('buyMultiplierButton')
+const donutsDisplay = document.getElementById('donutsCount')
+const autoClickersDisplay = document.getElementById('autoClickersCount')
+const autoClickersCostDisplay = document.getElementById('autoClickersCost')
+const multiplersDisplay = document.getElementById('multipliersCount')
+const multiplersCostDisplay = document.getElementById('multipliersCost')
+const resetButton = document.getElementById('resetButton')
+const aboutDev = document.getElementById('aboutDev')
+const aboutDevModal = document.getElementsByClassName('about-dev-modal')
 
 let donutMaker = {
   donuts: STARTING_DONUTS,
@@ -79,12 +80,29 @@ buyMultiplierButton.addEventListener('click', event => {
   updateDisplay()
 })
 
+resetButton.addEventListener('click', event => {
+  donutMaker = {
+  donuts: STARTING_DONUTS,
+  autoClickers: STARTING_AUTOCLICKERS,
+  autoClickerInitialCost: AUTOCLICKER_INITIAL_COST,
+  autoClickerCostIncreasePercentage: AUTOCLICKER_COST_INCREASE_PERCENTAGE,
+  autoClickerCost: AUTOCLICKER_INITIAL_COST,
+  multipliers: STARTING_MULTIPLIERS,
+  multiplierCost: MULTIPLIER_INITIAL_COST,
+  multiplierCostIncreasePercentage: MULTIPLIER_COST_INCREASE_PERCENTAGE,
+  donutsPerClick: STARTING_DONUTS_PER_CLICK
+  } 
+})
+
 const update = () => {
   donutMaker.donuts += donutMaker.autoClickers * donutMaker.donutsPerClick
   updateDisplay()
 }
 
-
 // go time
 updateDisplay()
 window.setInterval(update, 1000)
+
+aboutDev.addEventListener('click', event => {
+  aboutDevModal.style.display = 'block'
+})
