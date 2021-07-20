@@ -10,6 +10,14 @@ const MULTIPLIER_INITIAL_COST = 10
 const AUTOCLICKER_COST_INCREASE_PERCENTAGE = 1.10
 const MULTIPLIER_COST_INCREASE_PERCENTAGE = 1.10
 
+import { click, buyAutoClicker, buyMultiplier }from './gameFunctions.js' 
+import Header from './components/Header.js'
+import DonutSection from './components/DonutSection.js'
+import AutoClickerSection from './components/AutoClickerSection.js'
+import MultiplierSection from './components/MultiplierSection.js'
+
+document.querySelector('header').innerHTML = Header()
+document.querySelector('.container').innerHTML = `${DonutSection()} ${AutoClickerSection()} ${MultiplierSection()}`
 
 const makeDonutButton = document.getElementById('makeDonutButton')
 const buyAutoClickerButton = document.getElementById('buyAutoClickerButton')
@@ -23,7 +31,7 @@ const resetButton = document.getElementById('resetButton')
 const aboutDev = document.getElementById('aboutDev')
 const aboutDevModal = document.getElementsByClassName('about-dev-modal')
 
-let donutMaker = {
+let initialState = {
   donuts: STARTING_DONUTS,
   autoClickers: STARTING_AUTOCLICKERS,
   autoClickerInitialCost: AUTOCLICKER_INITIAL_COST,
@@ -35,71 +43,42 @@ let donutMaker = {
   donutsPerClick: STARTING_DONUTS_PER_CLICK
 }
 
-const click = x => {
-  x.donuts += x.donutsPerClick
-  return x
-}
-
-const buyAutoClicker = x => {
-  x.donuts -= x.autoClickerCost
-  x.autoClickers += 1
-  x.autoClickerCost *= x.autoClickerCostIncreasePercentage
-  return x
-}
-
-const buyMultiplier = x => {
-  x.donuts -= x.multiplierCost
-  x.multipliers += 1
-  x.multiplierCost *= x.multiplierCostIncreasePercentage
-  x.donutsPerClick = Math.pow(1.2, x.multipliers)
-  return x
-}
-
-const updateDisplay = () => {
-  donutsDisplay.innerHTML = `Donuts: ${Math.floor(donutMaker.donuts)}`
-  multiplersDisplay.innerHTML = `Count: ${Math.floor(donutMaker.multipliers)}`
-  multiplersCostDisplay.innerHTML = `Cost: ${Math.floor(donutMaker.multiplierCost)}`
-  autoClickersDisplay.innerHTML = `Count: ${Math.floor(donutMaker.autoClickers)}`
-  autoClickersCostDisplay.innerHTML = `Cost: ${Math.floor(donutMaker.autoClickerCost)}`
-  buyAutoClickerButton.disabled = donutMaker.donuts < donutMaker.autoClickerCost
-  buyMultiplierButton.disabled = donutMaker.donuts < donutMaker.multiplierCost
-}
+let state = Object.assign({}, initialState)
 
 makeDonutButton.addEventListener('click', (event) => {
-  donutMaker = click(donutMaker)
+  state = click(state)
   updateDisplay()
 })
 
 buyAutoClickerButton.addEventListener('click', event => {
-  donutmaker = buyAutoClicker(donutMaker)
+  state = buyAutoClicker(state)
   updateDisplay()
 })
 
 buyMultiplierButton.addEventListener('click', event => {
-  donutMaker = buyMultiplier(donutMaker)
+  state = buyMultiplier(state)
   updateDisplay()
 })
 
 resetButton.addEventListener('click', event => {
-  donutMaker = {
-  donuts: STARTING_DONUTS,
-  autoClickers: STARTING_AUTOCLICKERS,
-  autoClickerInitialCost: AUTOCLICKER_INITIAL_COST,
-  autoClickerCostIncreasePercentage: AUTOCLICKER_COST_INCREASE_PERCENTAGE,
-  autoClickerCost: AUTOCLICKER_INITIAL_COST,
-  multipliers: STARTING_MULTIPLIERS,
-  multiplierCost: MULTIPLIER_INITIAL_COST,
-  multiplierCostIncreasePercentage: MULTIPLIER_COST_INCREASE_PERCENTAGE,
-  donutsPerClick: STARTING_DONUTS_PER_CLICK
-  } 
+  state = Object.assign({}, initialState)
 })
 
+const updateDisplay = () => {
+  donutsDisplay.innerHTML = `Donuts: ${Math.floor(state.donuts)}`
+  multiplersDisplay.innerHTML = `Count: ${Math.floor(state.multipliers)}`
+  multiplersCostDisplay.innerHTML = `Cost: ${Math.floor(state.multiplierCost)}`
+  autoClickersDisplay.innerHTML = `Count: ${Math.floor(state.autoClickers)}`
+  autoClickersCostDisplay.innerHTML = `Cost: ${Math.floor(state.autoClickerCost)}`
+  buyAutoClickerButton.disabled = state.donuts < state.autoClickerCost
+  buyMultiplierButton.disabled = state.donuts < state.multiplierCost
+}
+
 const update = () => {
-  donutMaker.donuts += donutMaker.autoClickers * donutMaker.donutsPerClick
+  state.donuts += state.autoClickers * state.donutsPerClick
   updateDisplay()
 }
 
-// go time
 updateDisplay()
 window.setInterval(update, 1000)
 
