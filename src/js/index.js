@@ -15,6 +15,7 @@ import Header from './components/Header.js'
 import DonutSection from './components/DonutSection.js'
 import AutoClickerSection from './components/AutoClickerSection.js'
 import MultiplierSection from './components/MultiplierSection.js'
+import Modal from './components/Modal.js'
 
 document.querySelector('header').innerHTML = Header()
 document.querySelector('.container').innerHTML = `${DonutSection()} ${AutoClickerSection()} ${MultiplierSection()}`
